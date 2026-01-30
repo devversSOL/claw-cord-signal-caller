@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, Settings2, Circle } from "lucide-react";
@@ -54,56 +54,107 @@ const mockServers: ServerItem[] = [
   },
 ];
 
-function ServerCard({ server }: { server: ServerItem }) {
+function ServerCard({ server, index }: { server: ServerItem; index: number }) {
   return (
-    <div className="group flex items-start justify-between rounded-lg border border-border/50 bg-secondary/30 p-3 transition-colors hover:border-border hover:bg-secondary/50">
-      <div className="flex flex-col gap-1.5">
+    <motion.div
+      initial={{ opacity: 0, x: 10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className="group flex items-start justify-between rounded-2xl p-4 transition-all duration-200 hover:bg-[#f5f5f5] cursor-pointer"
+    >
+      <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-foreground">{server.name}</span>
+          <span
+            className="font-medium text-[#202020]"
+            style={{ fontFamily: "var(--font-figtree), Figtree", fontWeight: "500" }}
+          >
+            {server.name}
+          </span>
           {server.autopostEnabled && (
-            <Circle className="h-2 w-2 fill-primary text-primary" />
+            <Circle className="h-2 w-2 fill-green-500 text-green-500" />
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="text-xs">
+          <Badge
+            variant="outline"
+            className="text-xs bg-transparent border-[#e5e5e5] text-[#666666] rounded-full"
+            style={{ fontFamily: "var(--font-figtree), Figtree" }}
+          >
             {server.policy}
           </Badge>
-          <span className="text-xs text-muted-foreground">
+          <span
+            className="text-xs text-muted-foreground"
+            style={{ fontFamily: "var(--font-figtree), Figtree" }}
+          >
             {server.watchlistCount} watching
           </span>
         </div>
-        <span className="text-xs text-muted-foreground">{server.lastActive}</span>
+        <span
+          className="text-xs text-muted-foreground"
+          style={{ fontFamily: "var(--font-figtree), Figtree" }}
+        >
+          {server.lastActive}
+        </span>
       </div>
       <div className="flex flex-col items-end gap-1">
-        <span className="text-lg font-semibold text-foreground">{server.callsToday}</span>
-        <span className="text-xs text-muted-foreground">calls today</span>
+        <span
+          className="text-2xl font-medium text-[#202020]"
+          style={{ fontFamily: "var(--font-figtree), Figtree", fontWeight: "500" }}
+        >
+          {server.callsToday}
+        </span>
+        <span
+          className="text-xs text-muted-foreground"
+          style={{ fontFamily: "var(--font-figtree), Figtree" }}
+        >
+          calls today
+        </span>
         <Button
           variant="ghost"
           size="icon"
-          className="mt-1 h-7 w-7 opacity-0 transition-opacity group-hover:opacity-100"
+          className="mt-1 h-7 w-7 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
         >
-          <Settings2 className="h-3.5 w-3.5" />
+          <Settings2 className="h-3.5 w-3.5 text-muted-foreground" />
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export function ServersSidebar() {
   return (
-    <Card className="border-border bg-card">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-base font-medium">Servers</CardTitle>
-        <Button variant="outline" size="sm">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+      className="rounded-[32px] overflow-hidden"
+      style={{
+        backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
+        boxShadow:
+          "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px",
+      }}
+    >
+      <div className="flex flex-row items-center justify-between p-6 pb-2">
+        <h3
+          className="text-xl font-medium text-[#202020]"
+          style={{ fontFamily: "var(--font-figtree), Figtree", fontWeight: "500" }}
+        >
+          Servers
+        </h3>
+        <Button
+          variant="outline"
+          size="sm"
+          className="rounded-full border-[#e5e5e5] hover:border-[#202020] transition-colors bg-transparent"
+        >
           <Plus className="mr-1 h-4 w-4" />
           Add Server
         </Button>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3">
-        {mockServers.map((server) => (
-          <ServerCard key={server.id} server={server} />
+      </div>
+      <div className="flex flex-col gap-1 p-4 pt-2">
+        {mockServers.map((server, idx) => (
+          <ServerCard key={server.id} server={server} index={idx} />
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 }

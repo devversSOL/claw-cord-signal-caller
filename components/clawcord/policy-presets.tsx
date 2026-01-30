@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react"
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type React from "react";
+import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sparkles, TrendingUp, Target, Wallet, Shield, Users, ChevronRight } from "lucide-react";
@@ -67,44 +66,87 @@ const presets: PolicyPreset[] = [
   },
 ];
 
-function PresetCard({ preset }: { preset: PolicyPreset }) {
+function PresetCard({ preset, index }: { preset: PolicyPreset; index: number }) {
   return (
-    <div className="group flex items-center justify-between rounded-lg border border-border/50 bg-secondary/30 p-3 transition-all hover:border-primary/30 hover:bg-secondary/50">
+    <motion.div
+      initial={{ opacity: 0, x: 10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className="group flex items-center justify-between rounded-2xl p-3 transition-all duration-200 hover:bg-[#f5f5f5] cursor-pointer"
+    >
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary text-muted-foreground transition-colors group-hover:bg-primary/20 group-hover:text-primary">
+        <div
+          className="flex h-10 w-10 items-center justify-center rounded-xl text-primary transition-colors"
+          style={{
+            background: "linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(220, 38, 38, 0.05))",
+          }}
+        >
           {preset.icon}
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-foreground">{preset.name}</span>
-          <span className="text-xs text-muted-foreground">{preset.description}</span>
+          <span
+            className="text-sm font-medium text-[#202020]"
+            style={{ fontFamily: "var(--font-figtree), Figtree", fontWeight: "500" }}
+          >
+            {preset.name}
+          </span>
+          <span
+            className="text-xs text-muted-foreground"
+            style={{ fontFamily: "var(--font-figtree), Figtree" }}
+          >
+            {preset.description}
+          </span>
         </div>
       </div>
       <div className="flex items-center gap-3">
         {preset.usage > 0 && (
-          <Badge variant="secondary" className="text-xs">
+          <Badge
+            variant="secondary"
+            className="text-xs bg-[#f5f5f5] text-[#666666] border-0 rounded-full"
+            style={{ fontFamily: "var(--font-figtree), Figtree" }}
+          >
             {preset.usage} servers
           </Badge>
         )}
         <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export function PolicyPresets() {
   return (
-    <Card className="border-border bg-card">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-base font-medium">Policy Presets</CardTitle>
-        <Button variant="outline" size="sm">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+      className="rounded-[32px] overflow-hidden"
+      style={{
+        backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
+        boxShadow:
+          "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px",
+      }}
+    >
+      <div className="flex flex-row items-center justify-between p-6 pb-2">
+        <h3
+          className="text-xl font-medium text-[#202020]"
+          style={{ fontFamily: "var(--font-figtree), Figtree", fontWeight: "500" }}
+        >
+          Policy Presets
+        </h3>
+        <Button
+          variant="outline"
+          size="sm"
+          className="rounded-full border-[#e5e5e5] hover:border-[#202020] transition-colors bg-transparent"
+        >
           Create Custom
         </Button>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2">
-        {presets.map((preset) => (
-          <PresetCard key={preset.id} preset={preset} />
+      </div>
+      <div className="flex flex-col gap-1 p-4 pt-2">
+        {presets.map((preset, idx) => (
+          <PresetCard key={preset.id} preset={preset} index={idx} />
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 }

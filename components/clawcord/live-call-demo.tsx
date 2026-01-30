@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion, AnimatePresence } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -104,176 +104,250 @@ export function LiveCallDemo() {
   const getRiskIcon = (type: "high" | "medium" | "low") => {
     switch (type) {
       case "high":
-        return <XCircle className="h-4 w-4 text-destructive" />;
+        return <XCircle className="h-4 w-4 text-red-500" />;
       case "medium":
-        return <AlertTriangle className="h-4 w-4 text-warning" />;
+        return <AlertTriangle className="h-4 w-4 text-amber-500" />;
       case "low":
-        return <CheckCircle className="h-4 w-4 text-primary" />;
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
     }
   };
 
   return (
-    <Card className="border-border bg-card">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-base font-medium">
-          <Zap className="h-4 w-4 text-primary" />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="rounded-[32px] overflow-hidden"
+      style={{
+        backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
+        boxShadow:
+          "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px, rgba(0, 0, 0, 0.04) 0px 12px 12px -6px",
+      }}
+    >
+      <div className="p-6 pb-4">
+        <h3
+          className="flex items-center gap-2 text-xl font-medium text-[#202020]"
+          style={{ fontFamily: "var(--font-figtree), Figtree", fontWeight: "500" }}
+        >
+          <div
+            className="flex h-8 w-8 items-center justify-center rounded-lg"
+            style={{
+              background: "linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(220, 38, 38, 0.05))",
+            }}
+          >
+            <Zap className="h-4 w-4 text-primary" />
+          </div>
           Try a Call
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+        </h3>
+      </div>
+      <div className="flex flex-col gap-4 px-6 pb-6">
         <div className="flex gap-2">
           <Input
             placeholder="Token address or $TICKER"
             value={tokenInput}
             onChange={(e) => setTokenInput(e.target.value)}
-            className="flex-1 bg-secondary"
+            className="flex-1 h-12 bg-[#f5f5f5] border-0 rounded-xl"
+            style={{ fontFamily: "var(--font-figtree), Figtree" }}
           />
           <Select value={selectedPolicy} onValueChange={setSelectedPolicy}>
-            <SelectTrigger className="w-36 bg-secondary">
+            <SelectTrigger className="w-40 h-12 bg-[#f5f5f5] border-0 rounded-xl">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               <SelectItem value="fresh-scanner">Fresh Scanner</SelectItem>
               <SelectItem value="momentum">Momentum</SelectItem>
               <SelectItem value="dip-hunter">Dip Hunter</SelectItem>
               <SelectItem value="whale-follow">Whale Follow</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={handleGenerateCall} disabled={!tokenInput || loading}>
+          <Button
+            onClick={handleGenerateCall}
+            disabled={!tokenInput || loading}
+            className="h-12 px-6 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all"
+            style={{ fontFamily: "var(--font-figtree), Figtree", fontWeight: "500" }}
+          >
             {loading ? "Generating..." : "Generate Call"}
           </Button>
         </div>
 
-        {result && result.success && (
-          <div className="rounded-lg border border-primary/30 bg-secondary/50 p-4">
-            <div className="mb-4 flex items-start justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold text-foreground">
-                    ${result.token?.symbol}
-                  </span>
-                  <Badge variant="outline" className="font-mono text-xs">
-                    {result.token?.mint}
-                  </Badge>
+        <AnimatePresence mode="wait">
+          {result && result.success && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/5 to-transparent p-5"
+            >
+              <div className="mb-5 flex items-start justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-2xl font-medium text-[#202020]"
+                      style={{ fontFamily: "var(--font-figtree), Figtree", fontWeight: "600" }}
+                    >
+                      ${result.token?.symbol}
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="text-xs rounded-full bg-white border-[#e5e5e5]"
+                      style={{ fontFamily: "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace" }}
+                    >
+                      {result.token?.mint}
+                    </Badge>
+                  </div>
+                  <p
+                    className="mt-1 text-sm text-muted-foreground"
+                    style={{ fontFamily: "var(--font-figtree), Figtree" }}
+                  >
+                    Policy: {selectedPolicy.charAt(0).toUpperCase() + selectedPolicy.slice(1).replace("-", " ")}
+                  </p>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Policy: {selectedPolicy.charAt(0).toUpperCase() + selectedPolicy.slice(1).replace("-", " ")}
-                </p>
+                <div className="flex flex-col items-end">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-sm text-muted-foreground"
+                      style={{ fontFamily: "var(--font-figtree), Figtree" }}
+                    >
+                      Confidence
+                    </span>
+                    <span
+                      className="text-3xl font-medium text-primary"
+                      style={{ fontFamily: "var(--font-figtree), Figtree", fontWeight: "600" }}
+                    >
+                      {result.confidence}
+                    </span>
+                    <span
+                      className="text-sm text-muted-foreground"
+                      style={{ fontFamily: "var(--font-figtree), Figtree" }}
+                    >
+                      /10
+                    </span>
+                  </div>
+                  <div className="mt-2 h-2 w-28 overflow-hidden rounded-full bg-[#f0f0f0]">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${(result.confidence || 0) * 10}%` }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                      className="h-full bg-primary rounded-full"
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col items-end">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Confidence</span>
-                  <span className="text-2xl font-bold text-primary">
-                    {result.confidence}
-                  </span>
-                  <span className="text-sm text-muted-foreground">/10</span>
-                </div>
-                <div className="mt-1 h-2 w-24 overflow-hidden rounded-full bg-secondary">
-                  <div
-                    className="h-full bg-primary transition-all"
-                    style={{ width: `${(result.confidence || 0) * 10}%` }}
-                  />
-                </div>
-              </div>
-            </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <h4 className="mb-2 text-xs font-medium text-muted-foreground">
-                  TRIGGERS
-                </h4>
-                <ul className="space-y-1">
-                  {result.triggers?.map((trigger, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-foreground">
-                      <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                      {trigger}
-                    </li>
+              <div className="grid gap-5 md:grid-cols-2">
+                <div>
+                  <h4
+                    className="mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wide"
+                    style={{ fontFamily: "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace" }}
+                  >
+                    TRIGGERS
+                  </h4>
+                  <ul className="space-y-2">
+                    {result.triggers?.map((trigger, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-sm text-[#404040]"
+                        style={{ fontFamily: "var(--font-figtree), Figtree" }}
+                      >
+                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
+                        {trigger}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h4
+                    className="mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wide"
+                    style={{ fontFamily: "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace" }}
+                  >
+                    RISKS
+                  </h4>
+                  <ul className="space-y-2">
+                    {result.risks?.map((risk, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-sm text-[#404040]"
+                        style={{ fontFamily: "var(--font-figtree), Figtree" }}
+                      >
+                        {getRiskIcon(risk.type)}
+                        {risk.message}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {result.metrics && (
+                <div className="mt-5 grid grid-cols-3 gap-4 border-t border-[#e5e5e5] pt-5 md:grid-cols-6">
+                  {[
+                    { label: "Price", value: `$${result.metrics.price.toFixed(8)}` },
+                    { label: "Volume 24h", value: `$${formatNumber(result.metrics.volume24h)}` },
+                    { label: "Liquidity", value: `$${formatNumber(result.metrics.liquidity)}` },
+                    { label: "Holders", value: result.metrics.holders.toString() },
+                    { label: "Holder Change", value: `+${result.metrics.holderChange.toFixed(1)}%`, highlight: true },
+                    { label: "Age", value: `${result.metrics.tokenAge.toFixed(1)}h` },
+                  ].map((metric, i) => (
+                    <div key={i}>
+                      <span
+                        className="text-xs text-muted-foreground"
+                        style={{ fontFamily: "var(--font-figtree), Figtree" }}
+                      >
+                        {metric.label}
+                      </span>
+                      <p
+                        className={`text-sm ${metric.highlight ? "text-green-600" : "text-[#202020]"}`}
+                        style={{ fontFamily: "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace" }}
+                      >
+                        {metric.value}
+                      </p>
+                    </div>
                   ))}
-                </ul>
-              </div>
+                </div>
+              )}
 
-              <div>
-                <h4 className="mb-2 text-xs font-medium text-muted-foreground">
-                  RISKS
-                </h4>
-                <ul className="space-y-1">
-                  {result.risks?.map((risk, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-foreground">
-                      {getRiskIcon(risk.type)}
-                      {risk.message}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {result.metrics && (
-              <div className="mt-4 grid grid-cols-3 gap-4 border-t border-border/50 pt-4 md:grid-cols-6">
-                <div>
-                  <span className="text-xs text-muted-foreground">Price</span>
-                  <p className="font-mono text-sm text-foreground">
-                    ${result.metrics.price.toFixed(8)}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-xs text-muted-foreground">Volume 24h</span>
-                  <p className="font-mono text-sm text-foreground">
-                    ${formatNumber(result.metrics.volume24h)}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-xs text-muted-foreground">Liquidity</span>
-                  <p className="font-mono text-sm text-foreground">
-                    ${formatNumber(result.metrics.liquidity)}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-xs text-muted-foreground">Holders</span>
-                  <p className="font-mono text-sm text-foreground">
-                    {result.metrics.holders}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-xs text-muted-foreground">Holder Change</span>
-                  <p className="font-mono text-sm text-primary">
-                    +{result.metrics.holderChange.toFixed(1)}%
-                  </p>
-                </div>
-                <div>
-                  <span className="text-xs text-muted-foreground">Age</span>
-                  <p className="font-mono text-sm text-foreground">
-                    {result.metrics.tokenAge.toFixed(1)}h
-                  </p>
+              <div className="mt-5 flex items-center justify-between border-t border-[#e5e5e5] pt-5">
+                <code
+                  className="rounded-full bg-[#f5f5f5] px-3 py-1.5 text-xs text-muted-foreground"
+                  style={{ fontFamily: "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace" }}
+                >
+                  {result.callId}
+                </code>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full border-[#e5e5e5] hover:border-[#202020] bg-transparent"
+                  >
+                    <Copy className="mr-1 h-3.5 w-3.5" />
+                    Copy
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full border-[#e5e5e5] hover:border-[#202020] bg-transparent"
+                  >
+                    <ExternalLink className="mr-1 h-3.5 w-3.5" />
+                    View Full
+                  </Button>
                 </div>
               </div>
-            )}
-
-            <div className="mt-4 flex items-center justify-between border-t border-border/50 pt-4">
-              <code className="rounded bg-secondary px-2 py-1 font-mono text-xs text-muted-foreground">
-                {result.callId}
-              </code>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm">
-                  <Copy className="mr-1 h-3.5 w-3.5" />
-                  Copy
-                </Button>
-                <Button variant="outline" size="sm">
-                  <ExternalLink className="mr-1 h-3.5 w-3.5" />
-                  View Full
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {!result && (
-          <div className="flex h-48 items-center justify-center rounded-lg border border-dashed border-border bg-secondary/30">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-[#e5e5e5] bg-[#fafafa]">
+            <p
+              className="text-sm text-muted-foreground"
+              style={{ fontFamily: "var(--font-figtree), Figtree" }}
+            >
               Enter a token address or ticker to generate a call
             </p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 }
