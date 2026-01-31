@@ -1,4 +1,6 @@
 import type {
+  CallCard,
+  CallLog,
   CommandContext,
   CommandName,
   GuildConfig,
@@ -25,8 +27,8 @@ interface CommandResponse {
 interface StorageInterface {
   getGuildConfig(guildId: string): Promise<GuildConfig | null>;
   saveGuildConfig(config: GuildConfig): Promise<void>;
-  addCallLog(guildId: string, log: unknown): Promise<void>;
-  getCallLogs(guildId: string, limit: number): Promise<unknown[]>;
+  addCallLog(guildId: string, log: CallLog | (CallCard & Partial<CallLog>)): Promise<void>;
+  getCallLogs(guildId: string, limit: number): Promise<CallLog[]>;
 }
 
 const commands: Record<CommandName, CommandHandler> = {

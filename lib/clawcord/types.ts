@@ -101,6 +101,13 @@ export interface CallCard {
   };
 }
 
+export interface DisplaySettings {
+  minScore: number;
+  showVolume: boolean;
+  showHolders: boolean;
+  showLinks: boolean;
+}
+
 export interface GuildConfig {
   guildId: string;
   guildName: string;
@@ -114,6 +121,7 @@ export interface GuildConfig {
   updatedAt: Date;
   callCount: number;
   lastCallAt?: Date;
+  display?: DisplaySettings;
 }
 
 export interface WatchlistItem {
