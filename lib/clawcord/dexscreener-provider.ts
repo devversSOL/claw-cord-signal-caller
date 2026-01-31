@@ -334,10 +334,32 @@ export class GraduationWatcher {
   }
 }
 
+// Optimized defaults based on PumpFun graduation research:
+// - Tokens graduate at ~$75k mcap with ~$12-15k initial liquidity
+// - Best entry window is 15-45 minutes post-graduation
+// - Only ~1-2% of tokens graduate, so these are already filtered
 export const DEFAULT_GRADUATION_FILTER: GraduationFilter = {
-  minLiquidity: 5000,
+  minLiquidity: 12000,      // Post-graduation baseline from bonding curve
+  minVolume5m: 1000,        // Active trading, not dead on arrival
+  minHolders: 75,           // Healthy distribution, avoid dev-heavy tokens
+  maxAgeMinutes: 45,        // Catch early but after initial dump settles
+  excludeRuggedDeployers: true,
+};
+
+// Aggressive preset for early snipers (higher risk, higher reward)
+export const AGGRESSIVE_GRADUATION_FILTER: GraduationFilter = {
+  minLiquidity: 8000,
   minVolume5m: 500,
-  minHolders: 50,
-  maxAgeMinutes: 60,
+  minHolders: 40,
+  maxAgeMinutes: 20,        // Very early entry
+  excludeRuggedDeployers: true,
+};
+
+// Conservative preset for safer plays
+export const CONSERVATIVE_GRADUATION_FILTER: GraduationFilter = {
+  minLiquidity: 20000,      // Well-established liquidity
+  minVolume5m: 2000,        // Strong trading activity
+  minHolders: 150,          // Wide distribution
+  maxAgeMinutes: 120,       // More time to prove itself
   excludeRuggedDeployers: true,
 };

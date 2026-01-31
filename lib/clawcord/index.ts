@@ -55,6 +55,8 @@ export {
   DexScreenerProvider,
   GraduationWatcher,
   DEFAULT_GRADUATION_FILTER,
+  AGGRESSIVE_GRADUATION_FILTER,
+  CONSERVATIVE_GRADUATION_FILTER,
 } from "./dexscreener-provider";
 
 // Autopost Service
