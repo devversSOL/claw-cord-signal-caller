@@ -173,22 +173,27 @@ export default function ClawCordLanding() {
               </a>
             </div>
           </motion.div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2">
-              <div className="w-1 h-2 bg-white/50 rounded-full" />
-            </div>
-          </motion.div>
         </div>
+
+        {/* Scroll indicator - positioned at bottom of section */}
+        <motion.div
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2">
+            <div className="w-1 h-2 bg-white/50 rounded-full" />
+          </div>
+        </motion.div>
       </section>
 
+      {/* ===== TRANSITION FADE ===== */}
+      <div className="relative h-32 -mt-16 z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1a] via-[#1a1a1a]/50 to-[#f5f0e8]" />
+      </div>
+
       {/* ===== WHY CLAWCORD SECTION ===== */}
-      <section className="py-24 bg-[#f5f0e8] relative">
+      <section className="py-24 bg-[#f5f0e8] relative -mt-16">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
