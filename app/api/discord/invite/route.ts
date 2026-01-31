@@ -3,12 +3,13 @@ import { generateBotInviteUrl } from "@/lib/clawcord/discord-oauth";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const redirectUri = searchParams.get("redirect");
+  const json = searchParams.get("json") === "true";
 
   try {
     const clientId = process.env.DISCORD_APPLICATION_ID;
     
     if (!clientId) {
+      // If no client ID, redirect to a fallback or show error
       return NextResponse.json(
         { error: "Discord Application ID not configured" },
         { status: 500 }
@@ -17,25 +18,25 @@ export async function GET(request: NextRequest) {
 
     const inviteUrl = generateBotInviteUrl({
       clientId,
-      redirectUri: redirectUri || undefined,
     });
 
-    // If redirect param is set, redirect directly
-    if (redirectUri) {
-      return NextResponse.redirect(inviteUrl);
+    // If json param is set, return JSON (for programmatic use)
+    if (json) {
+      return NextResponse.json({
+        success: true,
+        inviteUrl,
+        instructions: [
+          "1. Click the invite URL to add ClawCord to your server",
+          "2. Select the server and authorize permissions",
+          "3. Use /clawcord install in any channel to complete setup",
+          "4. Configure your policy with /clawcord policy",
+          "5. Enable autopost with /clawcord autopost enabled:true",
+        ],
+      });
     }
 
-    return NextResponse.json({
-      success: true,
-      inviteUrl,
-      instructions: [
-        "1. Click the invite URL to add ClawCord to your server",
-        "2. Select the server and authorize permissions",
-        "3. Use /clawcord install in any channel to complete setup",
-        "4. Configure your policy with /clawcord policy",
-        "5. Enable autopost with /clawcord autopost enabled:true",
-      ],
-    });
+    // Default: redirect directly to Discord OAuth
+    return NextResponse.redirect(inviteUrl);
   } catch (error) {
     console.error("Failed to generate invite URL:", error);
     return NextResponse.json(
