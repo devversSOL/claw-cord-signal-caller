@@ -410,9 +410,30 @@ export default function ClawCordLanding() {
 
             {/* Link Sections */}
             {[
-              { title: "Product", links: ["Features", "Commands", "API Docs"] },
-              { title: "Resources", links: ["Documentation", "Discord", "Status"] },
-              { title: "Legal", links: ["Privacy", "Terms", "Security"] },
+              { 
+                title: "Product", 
+                links: [
+                  { name: "Features", href: "#try-commands" },
+                  { name: "Commands", href: "/docs/commands" },
+                  { name: "API Docs", href: "/docs/api" },
+                ] 
+              },
+              { 
+                title: "Resources", 
+                links: [
+                  { name: "Documentation", href: "/docs" },
+                  { name: "Discord", href: "https://discord.gg/NZEKBbqj2q" },
+                  { name: "Status", href: "/status" },
+                ] 
+              },
+              { 
+                title: "Legal", 
+                links: [
+                  { name: "Privacy", href: "/privacy" },
+                  { name: "Terms", href: "/terms" },
+                  { name: "Security", href: "/security" },
+                ] 
+              },
             ].map((section) => (
               <div key={section.title}>
                 <h4 className="text-sm font-medium text-white mb-4 uppercase tracking-wide">
@@ -420,9 +441,14 @@ export default function ClawCordLanding() {
                 </h4>
                 <ul className="space-y-2">
                   {section.links.map((link) => (
-                    <li key={link}>
-                      <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">
-                        {link}
+                    <li key={link.name}>
+                      <a 
+                        href={link.href} 
+                        target={link.href.startsWith("http") ? "_blank" : undefined}
+                        rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                        className="text-sm text-gray-400 hover:text-white transition-colors"
+                      >
+                        {link.name}
                       </a>
                     </li>
                   ))}
