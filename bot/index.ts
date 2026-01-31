@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits, Events, REST, Routes, ActivityType } from 'd
 import type { DisplaySettings, GuildConfig } from '../lib/clawcord/types';
 import { createPolicy } from '../lib/clawcord/policies';
 import { getStorage } from '../lib/clawcord/storage';
+import { getAutopostService } from '../lib/clawcord/autopost-service';
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!;
 const DISCORD_APPLICATION_ID = process.env.DISCORD_APPLICATION_ID!;
@@ -281,6 +282,11 @@ client.once(Events.ClientReady, async (c) => {
   c.user.setActivity('for graduations', { type: ActivityType.Watching });
   
   await registerCommands();
+
+  // Start the autopost service to scan for graduations and post calls automatically
+  const autopostService = getAutopostService();
+  autopostService.start();
+  console.log('🔄 Autopost service started - scanning every 60 seconds');
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
