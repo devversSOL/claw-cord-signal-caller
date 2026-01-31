@@ -37,7 +37,7 @@ export function Header() {
           {/* Logo */}
           <a href="/" className="flex items-center gap-3">
             <Image
-              src="/ClawCord-logo.png"
+              src="/ClawCord logo.png"
               alt="ClawCord Logo"
               width={48}
               height={48}

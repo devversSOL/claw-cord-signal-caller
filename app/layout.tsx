@@ -27,8 +27,8 @@ export const metadata: Metadata = {
   description: 'Policy-driven signal caller for Solana tokens. Automate your Discord calls with configurable policies and real-time data.',
   generator: 'v0.app',
   icons: {
-    icon: '/ClawCord-logo.png',
-    apple: '/ClawCord-logo.png',
+    icon: '/ClawCord logo.png',
+    apple: '/ClawCord logo.png',
   },
   openGraph: {
     title: 'ClawCord - Signal Caller Dashboard',
